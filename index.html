@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gmr</title>
+    <script type="application/json" id="data">
+      {
+        "@id": ""
+      }
+    </script>
+
+    <script type="module">
+      import { render, html } from 'https://cdn.skypack.dev/spux'
+      import 'https://cdn.skypack.dev/dior'
+
+      var resolver = 'https://gitmark.solid.live/public/gitmark.ttl'
+
+      console.log(di.data)
+
+      var response = await fetch(resolver, {
+        headers: {
+          Accept: 'application/ld+json'
+        }
+      })
+
+      const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop)
+      })
+
+      var gitmark = params.gitmark
+      var gitmarkURI = gitmark.split('/')[0]
+      var gitmarkFile = gitmark.split('/')[1] ? gitmark.split('/')[1] : ''
+
+      console.log('gitmark', gitmark)
+
+      var json = await response.json()
+      var resolvedURI = json[0][gitmarkURI][0]['@id']
+
+      var redirect = resolvedURI + gitmarkFile
+      console.log(redirect)
+
+      location.href = redirect
+    </script>
+  </head>
+  <body></body>
+</html>
